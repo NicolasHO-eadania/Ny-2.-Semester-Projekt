@@ -1,1 +1,3 @@
-# Ny-2.-Semester-Projekt
+# 2.semEksamenProjekt
+
+Kør SQL med indhold

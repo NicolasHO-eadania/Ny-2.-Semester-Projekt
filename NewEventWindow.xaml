@@ -1,0 +1,57 @@
+<Window x:Class="_2.semEksamenProjekt.NewEventWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Nyt event" Height="680" Width="400"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize">
+
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- felter -->
+        <StackPanel Grid.Row="0">
+
+            <TextBlock Text="Titel" FontWeight="Bold" Margin="0,0,0,4"/>
+            <TextBox x:Name="TitleInput" Margin="0,0,0,12"/>
+
+            <TextBlock Text="Beskrivelse" FontWeight="Bold" Margin="0,0,0,4"/>
+            <TextBox x:Name="DescriptionInput" Height="60" TextWrapping="Wrap"
+                     AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Margin="0,0,0,12"/>
+
+            <TextBlock Text="Dato" FontWeight="Bold" Margin="0,0,0,4"/>
+            <DatePicker x:Name="DateInput" Margin="0,0,0,8"/>
+
+            <TextBlock Text="Start (klokkeslæt, fx 08:00)" FontWeight="Bold" Margin="0,0,0,4"/>
+            <TextBox x:Name="StartTimeInput" Margin="0,0,0,12"/>
+
+            <TextBlock Text="Slut (klokkeslæt, fx 10:00)" FontWeight="Bold" Margin="0,0,0,4"/>
+            <TextBox x:Name="EndTimeInput" Margin="0,0,0,12"/>
+
+            <TextBlock Text="Lokale" FontWeight="Bold" Margin="0,0,0,4"/>
+            <TextBox x:Name="RoomInput" Margin="0,0,0,12"/>
+
+            <TextBlock Text="By" FontWeight="Bold" Margin="0,0,0,4"/>
+            <TextBox x:Name="CityInput" Margin="0,0,0,12"/>
+
+            <TextBlock Text="Underviser (brugernavn)" FontWeight="Bold" Margin="0,0,0,4"/>
+            <TextBox x:Name="TeacherInput" Margin="0,0,0,12"/>
+
+            <TextBlock Text="Hold" FontWeight="Bold" Margin="0,0,0,4"/>
+            <TextBox x:Name="TeamInput" Margin="0,0,0,12"/>
+
+            <TextBlock Text="Tags (kommasepareret)" FontWeight="Bold" Margin="0,0,0,4"/>
+            <TextBox x:Name="TagsInput" Margin="0,0,0,12"/>
+
+        </StackPanel>
+
+        <!-- gem og annuller knapper -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="Annuller" Width="80" Margin="0,0,8,0" Click="Cancel_Click"/>
+            <Button Content="Gem" Width="80" Click="Save_Click"/>
+        </StackPanel>
+
+    </Grid>
+</Window>

@@ -1,0 +1,28 @@
+<Window x:Class="_2.semEksamenProjekt.FlowOverviewWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Flows" Height="650" Width="900"
+        WindowStartupLocation="CenterScreen"
+        Loaded="WindowLoaded">
+
+    <Grid Margin="12">
+        <Grid.RowDefinitions>
+            <!-- navigationsknapper -->
+            <RowDefinition Height="Auto"/>
+            <!-- flow kort -->
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- navigationsknapper -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,12">
+            <Button Content="Skema" Width="70" Margin="0,0,4,0" Click="GoToSkema_Click"/>
+            <Button Content="Flows" Width="70" IsEnabled="False"/>
+        </StackPanel>
+
+        <!-- flow kort i en scrollbar wrappanel -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <WrapPanel x:Name="FlowsPanel" Orientation="Horizontal"/>
+        </ScrollViewer>
+
+    </Grid>
+</Window>
