@@ -11,17 +11,22 @@ namespace _2.semEksamenProjekt
             AllFlows = new List<Flow>();
         }
 
-        public List<Flow> FilterByTag(string tag)
+        // insertion sort. sorterer AllFlows alfabetisk efter titel
+        public void SortByTitle()
         {
-            List<Flow> result = new List<Flow>();
-
-            foreach (Flow flow in AllFlows)
+            for (int i = 1; i < AllFlows.Count; i++)
             {
-                if (flow.tags != null && flow.tags.Contains(tag))
-                    result.Add(flow);
-            }
+                Flow val = AllFlows[i];
+                int pointer = i;
 
-            return result;
+                while (pointer > 0 && string.Compare(val.Title, AllFlows[pointer - 1].Title) < 0)
+                {
+                    AllFlows[pointer] = AllFlows[pointer - 1];
+                    pointer--;
+                }
+
+                AllFlows[pointer] = val;
+            }
         }
     }
 }

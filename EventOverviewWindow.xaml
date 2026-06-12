@@ -7,9 +7,9 @@
 
     <Grid Margin="12">
         <Grid.RowDefinitions>
-            <!-- tabs -->
+            <!-- øverste bjælke knapper og billede -->
             <RowDefinition Height="Auto"/>
-            <!-- pile navigation + uge label -->
+            <!-- anden bjælke uge navigation, tilføj og filter -->
             <RowDefinition Height="Auto"/>
             <!-- dag headers -->
             <RowDefinition Height="40"/>
@@ -17,53 +17,66 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- navigationsknapper til at skifte vindue -->
-        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,8">
-            <Button Content="Skema" Width="70" Margin="0,0,4,0" IsEnabled="False"/>
-            <Button Content="Flows" Width="70" Click="GoToFlows_Click"/>
-        </StackPanel>
+        <!-- øverste bjælke -->
+        <Grid x:Name="TopBar" Grid.Row="0" Margin="0,0,0,8" Background="#cb142a">
+            <StackPanel Orientation="Horizontal">
+                <Button Content="Skema" Width="70" Margin="0,0,4,0" IsHitTestVisible="False"
+                        BorderThickness="0" Background="Transparent" Foreground="White"
+                        FontSize="18" FontWeight="Bold"/>
+                <Button Content="Flows" Width="70" Click="GoToFlows_Click"
+                        BorderThickness="0" Background="Transparent" Foreground="White"
+                        FontSize="18"/>
+            </StackPanel>
+            <Image HorizontalAlignment="Right" Height="35" Source="DaniaLogo.png" Stretch="Uniform"/>
+        </Grid>
 
-        <!-- navigationsknapper -->
-        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,8">
-            <Button Content="&#x2190;" Width="30" Click="PreviousWeek_Click"/>
-            <Button Content="&#x2302;" Width="30" Margin="4,0" Click="CurrentWeek_Click"/>
-            <Button Content="&#x2192;" Width="30" Click="NextWeek_Click"/>
-            <TextBlock x:Name="WeekLabel" VerticalAlignment="Center" FontSize="14" Margin="12,0,0,0"/>
-        </StackPanel>
+        <!-- anden bjælke -->
+        <Grid Grid.Row="1" Margin="0,0,0,8">
+            <StackPanel Orientation="Horizontal">
+                <Button Content="&#x2190;" Width="30" Click="PreviousWeek_Click"/>
+                <Button Content="&#x2302;" Width="30" Margin="4,0" Click="CurrentWeek_Click"/>
+                <Button Content="&#x2192;" Width="30" Click="NextWeek_Click"/>
+                <TextBlock x:Name="WeekLabel" VerticalAlignment="Center" FontSize="14" Margin="12,0,0,0"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button x:Name="AddEventButton" Content="+" Width="30" Margin="0,0,8,0" Click="NewEvent_Click"/>
+                <ComboBox x:Name="TagFilter" Width="150" VerticalAlignment="Center"
+                          SelectionChanged="TagFilter_Changed"/>
+            </StackPanel>
+        </Grid>
 
         <!-- dag headers -->
-        <!-- 60 pixels + 7 * 150 pixels = 1110 pixels -->
         <StackPanel Grid.Row="2" Orientation="Horizontal">
 
             <TextBlock Width="60"/>
 
-            <Border Width="150" BorderBrush="Gray" BorderThickness="1,1,0,1">
+            <Border Width="145" BorderBrush="Gray" BorderThickness="1,1,0,1">
                 <TextBlock x:Name="DayLabel1" HorizontalAlignment="Center"
-                           VerticalAlignment="Center" FontWeight="Bold"/>
+                           VerticalAlignment="Center" FontWeight="Bold" TextAlignment="Center"/>
             </Border>
-            <Border Width="150" BorderBrush="Gray" BorderThickness="0,1,0,1">
+            <Border Width="145" BorderBrush="Gray" BorderThickness="0,1,0,1">
                 <TextBlock x:Name="DayLabel2" HorizontalAlignment="Center"
-                           VerticalAlignment="Center" FontWeight="Bold"/>
+                           VerticalAlignment="Center" FontWeight="Bold" TextAlignment="Center"/>
             </Border>
-            <Border Width="150" BorderBrush="Gray" BorderThickness="0,1,0,1">
+            <Border Width="145" BorderBrush="Gray" BorderThickness="0,1,0,1">
                 <TextBlock x:Name="DayLabel3" HorizontalAlignment="Center"
-                           VerticalAlignment="Center" FontWeight="Bold"/>
+                           VerticalAlignment="Center" FontWeight="Bold" TextAlignment="Center"/>
             </Border>
-            <Border Width="150" BorderBrush="Gray" BorderThickness="0,1,0,1">
+            <Border Width="145" BorderBrush="Gray" BorderThickness="0,1,0,1">
                 <TextBlock x:Name="DayLabel4" HorizontalAlignment="Center"
-                           VerticalAlignment="Center" FontWeight="Bold"/>
+                           VerticalAlignment="Center" FontWeight="Bold" TextAlignment="Center"/>
             </Border>
-            <Border Width="150" BorderBrush="Gray" BorderThickness="0,1,0,1">
+            <Border Width="145" BorderBrush="Gray" BorderThickness="0,1,0,1">
                 <TextBlock x:Name="DayLabel5" HorizontalAlignment="Center"
-                           VerticalAlignment="Center" FontWeight="Bold"/>
+                           VerticalAlignment="Center" FontWeight="Bold" TextAlignment="Center"/>
             </Border>
-            <Border Width="150" BorderBrush="Gray" BorderThickness="0,1,0,1">
+            <Border Width="145" BorderBrush="Gray" BorderThickness="0,1,0,1">
                 <TextBlock x:Name="DayLabel6" HorizontalAlignment="Center"
-                           VerticalAlignment="Center" FontWeight="Bold"/>
+                           VerticalAlignment="Center" FontWeight="Bold" TextAlignment="Center"/>
             </Border>
-            <Border Width="150" BorderBrush="Gray" BorderThickness="0,1,1,1">
+            <Border Width="145" BorderBrush="Gray" BorderThickness="0,1,1,1">
                 <TextBlock x:Name="DayLabel7" HorizontalAlignment="Center"
-                           VerticalAlignment="Center" FontWeight="Bold"/>
+                           VerticalAlignment="Center" FontWeight="Bold" TextAlignment="Center"/>
             </Border>
 
         </StackPanel>
@@ -72,13 +85,9 @@
         <ScrollViewer Grid.Row="3"
                       VerticalScrollBarVisibility="Hidden"
                       HorizontalScrollBarVisibility="Disabled">
-
             <StackPanel Orientation="Horizontal">
-
                 <StackPanel x:Name="TimeColumn" Width="60"/>
-
                 <Canvas x:Name="EventsCanvas"/>
-
             </StackPanel>
         </ScrollViewer>
 

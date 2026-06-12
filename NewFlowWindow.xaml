@@ -1,0 +1,48 @@
+<Window x:Class="_2.semEksamenProjekt.NewFlowWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Nyt flow" Height="520" Width="400"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Loaded="Window_Loaded">
+
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+
+                <TextBlock Text="Titel" FontWeight="Bold" Margin="0,0,0,4"/>
+                <TextBox x:Name="TitleInput" Margin="0,0,0,12"/>
+
+                <TextBlock Text="Hold (valgfrit)" FontWeight="Bold" Margin="0,0,0,4"/>
+                <ComboBox x:Name="TeamInput" Margin="0,0,0,12"/>
+
+                <TextBlock Text="Undervisere" FontWeight="Bold" Margin="0,0,0,4"/>
+                <ListBox x:Name="TeachersList" Height="100" SelectionMode="Multiple" Margin="0,0,0,12"/>
+
+                <TextBlock Text="Tags" FontWeight="Bold" Margin="0,0,0,4"/>
+                <ListBox x:Name="TagsList" Height="100" SelectionMode="Multiple" Margin="0,0,0,12"/>
+
+                <!-- farvevælger -->
+                <TextBlock Text="Farve" FontWeight="Bold" Margin="0,0,0,4"/>
+                <StackPanel x:Name="ColorPicker" Orientation="Horizontal" Margin="0,0,0,12">
+                    <Border Width="35" Height="35" Background="#ADD8E6" Margin="0,0,6,0" BorderThickness="2" BorderBrush="Transparent" Cursor="Hand" Tag="#ADD8E6" MouseLeftButtonUp="ColorBox_Click"/>
+                    <Border Width="35" Height="35" Background="#90EE90" Margin="0,0,6,0" BorderThickness="2" BorderBrush="Transparent" Cursor="Hand" Tag="#90EE90" MouseLeftButtonUp="ColorBox_Click"/>
+                    <Border Width="35" Height="35" Background="#FFD9B3" Margin="0,0,6,0" BorderThickness="2" BorderBrush="Transparent" Cursor="Hand" Tag="#FFD9B3" MouseLeftButtonUp="ColorBox_Click"/>
+                    <Border Width="35" Height="35" Background="#DDA0DD" Margin="0,0,6,0" BorderThickness="2" BorderBrush="Transparent" Cursor="Hand" Tag="#DDA0DD" MouseLeftButtonUp="ColorBox_Click"/>
+                    <Border Width="35" Height="35" Background="#FFFF99" BorderThickness="2" BorderBrush="Transparent" Cursor="Hand" Tag="#FFFF99" MouseLeftButtonUp="ColorBox_Click"/>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
+            <Button Content="Annuller" Width="80" Margin="0,0,8,0" Click="Cancel_Click"/>
+            <Button Content="Gem" Width="80" Click="Save_Click"/>
+        </StackPanel>
+
+    </Grid>
+</Window>

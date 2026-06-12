@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -6,91 +7,146 @@ namespace _2.semEksamenProjekt
 {
     public partial class FlowOverviewWindow : Window
     {
-        FlowRepository flowRepository = new FlowRepository();
+        IRepositoryFactory factory;
+        FlowRepository flowRepository;
         FlowOverview overview = new FlowOverview();
 
         public FlowOverviewWindow()
         {
+            factory = new RepositoryFactory();
+            flowRepository = factory.CreateFlowRepository();
             InitializeComponent();
         }
 
         void WindowLoaded(object sender, RoutedEventArgs e)
         {
-            overview.AllFlows = flowRepository.GetAllFlows();
+            // skjul tilføj knap hvis brugeren ikke kan redigere flows
+            if (!Session.Instance.CanEditFlows)
+            {
+                AddFlowButton.Visibility = Visibility.Collapsed;
+            }
+
+            // indlæs tags i filter dropdown
+            TagFilter.Items.Add("Alle tags");
+            foreach (string tag in factory.CreateTagRepository().GetFlowTags())
+            {
+                TagFilter.Items.Add(tag);
+            }
+
+            TagFilter.SelectedIndex = 0;
+
+            Reload();
+        }
+
+        // genindlæs flows fra databasen og tegn kortene igen
+        public async void Reload()
+        {
+            // hent flows fra databasen i baggrunden
+            await Task.Run(() =>
+            {
+                overview.AllFlows = flowRepository.GetAllFlows();
+                overview.SortByTitle();
+            });
+
+            // opdater UI når data er hentet
             DrawFlowCards();
         }
 
-        // skifter til skema vinduet
+        // opdaterer flow oversigten når tag filter ændres
+        void TagFilter_Changed(object sender, SelectionChangedEventArgs e)
+        {
+            DrawFlowCards();
+        }
+
         void GoToSkema_Click(object sender, RoutedEventArgs e)
         {
             new EventOverviewWindow().Show();
             Close();
         }
 
-        // tegner et kort for hvert flow i wrappanelet
+        void NewFlow_Click(object sender, RoutedEventArgs e)
+        {
+            new NewFlowWindow(flowRepository, this).Show();
+        }
+
         void DrawFlowCards()
         {
             FlowsPanel.Children.Clear();
 
+            string selectedTag = TagFilter.SelectedIndex > 0 ? TagFilter.SelectedItem.ToString() : null;
+
+            int i = 0;
             foreach (Flow flow in overview.AllFlows)
             {
-                FlowsPanel.Children.Add(CreateFlowCard(flow));
+                if (Session.Instance.CanSeeFlow(flow) && (selectedTag == null || (flow.tags != null && flow.tags.Contains(selectedTag))))
+                {
+                    FlowsPanel.Children.Add(CreateFlowCard(flow, i++));
+                }
             }
         }
 
-        // opretter et enkelt flow kort
-        Border CreateFlowCard(Flow flow)
+        Border CreateFlowCard(Flow flow, int index = 0)
         {
-            // ydre ramme
+            // brug gemt farve fra databasen
+            Brush background = flow.color != null ? (Brush)new SolidColorBrush((Color)ColorConverter.ConvertFromString(flow.color)) : Brushes.White;
+
             Border card = new Border
             {
-                Width           = 220,
-                Height          = 120,
-                BorderBrush     = Brushes.Gray,
+                Width = 250,
+                Height = 120,
+                Background = background,
+                BorderBrush = Brushes.Gray,
                 BorderThickness = new Thickness(1),
-                Margin          = new Thickness(6)
+                Margin = new Thickness(6),
+                Cursor = System.Windows.Input.Cursors.Hand
             };
 
-            // vandret layout: billede til venstre, titel til højre
-            StackPanel content = new StackPanel
-            {
-                Orientation = Orientation.Horizontal,
-                Margin      = new Thickness(8)
-            };
-
-            // billedpladsholder
-            Border imagePlaceholder = new Border
-            {
-                Width           = 80,
-                Height          = 80,
-                BorderBrush     = Brushes.Gray,
-                BorderThickness = new Thickness(1),
-                Margin          = new Thickness(0, 0, 10, 0)
-            };
-
-            // titel
             TextBlock title = new TextBlock
             {
-                Text                = flow.Title,
-                FontWeight          = FontWeights.Bold,
-                FontSize            = 13,
-                TextWrapping        = TextWrapping.Wrap,
-                VerticalAlignment   = VerticalAlignment.Center,
-                Width               = 100
+                Text = flow.Title,
+                FontWeight = FontWeights.Bold,
+                FontSize = 13,
+                TextWrapping = TextWrapping.Wrap,
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Margin = new Thickness(10)
             };
 
-            content.Children.Add(imagePlaceholder);
-            content.Children.Add(title);
-            card.Child = content;
+            card.Child = title;
 
-            // åbn FlowWindow når man klikker på kortet
-            card.MouseUp += (sender, e) =>
+            // venstreklik åbner FlowWindow
+            card.MouseLeftButtonUp += (s, args) =>
             {
                 new FlowWindow(flow).Show();
                 Close();
             };
 
-            card.Cursor = System.Windows.Input.Cursors.Hand;
+            // højreklik menu kun for admin og underviser
+            if (Session.Instance.CanEditFlows)
+            {
+                ContextMenu contextMenu = new ContextMenu();
+
+                MenuItem editItem = new MenuItem { Header = "Rediger" };
+                editItem.Click += (s, args) =>
+                {
+                    new NewFlowWindow(flowRepository, this, flow).Show();
+                };
+
+                MenuItem deleteItem = new MenuItem { Header = "Slet" };
+                deleteItem.Click += (s, args) =>
+                {
+                    if (MessageBox.Show($"Vil du slette '{flow.Title}'?", "Slet flow",
+                        MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                    {
+                        flowRepository.DeleteFlow(flow.id);
+                        Reload();
+                    }
+                };
+
+                contextMenu.Items.Add(editItem);
+                contextMenu.Items.Add(deleteItem);
+                card.ContextMenu = contextMenu;
+            }
 
             return card;
         }
